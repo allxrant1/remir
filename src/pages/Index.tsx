@@ -1,27 +1,32 @@
 
 import { useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
-import { TopBar } from "@/components/TopBar";
-import { WelcomeBanner } from "@/components/WelcomeBanner";
-import { VerseCard } from "@/components/VerseCard";
-import { ComeAsYouAreCard } from "@/components/ComeAsYouAreCard";
-import { UpcomingEventsSection } from "@/components/UpcomingEventsSection";
+import { ModernTopBar } from "@/components/ModernTopBar";
+import { HeroSection } from "@/components/HeroSection";
+import { BentoGrid } from "@/components/BentoGrid";
+import { FloatingElements } from "@/components/FloatingElements";
 
 const Index = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
+      {/* Floating background elements */}
+      <FloatingElements />
+      
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="lg:ml-64 transition-all duration-300">
-        <TopBar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="p-4 lg:p-8 space-y-8">
-          <WelcomeBanner />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ComeAsYouAreCard />
-            <VerseCard />
+      
+      <div className="lg:ml-64 transition-all duration-300 relative z-10">
+        <ModernTopBar onMenuClick={() => setSidebarOpen(true)} />
+        
+        <main className="relative">
+          {/* Hero Section */}
+          <HeroSection />
+          
+          {/* Bento Grid Layout */}
+          <div className="px-4 lg:px-8 pb-16">
+            <BentoGrid />
           </div>
-          <UpcomingEventsSection />
         </main>
       </div>
     </div>
