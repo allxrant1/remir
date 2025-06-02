@@ -1,6 +1,7 @@
 
 import { X, Home, Calendar, MessageSquare, User, Heart, CircleUser, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -8,17 +9,19 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { icon: Home, label: "Início", href: "#", active: true },
-  { icon: Calendar, label: "Programação", href: "#" },
-  { icon: MessageSquare, label: "Mensagens", href: "#" },
-  { icon: User, label: "Oração", href: "#" },
-  { icon: Heart, label: "Contribuições", href: "#" },
-  { icon: CircleUser, label: "Comunidade", href: "#" },
-  { icon: User, label: "Meu Perfil", href: "#" },
-  { icon: CalendarDays, label: "Minha Escala", href: "#" },
+  { icon: Home, label: "Início", href: "/", active: false },
+  { icon: Calendar, label: "Programação", href: "/programacao", active: false },
+  { icon: MessageSquare, label: "Mensagens", href: "/mensagens", active: false },
+  { icon: User, label: "Oração", href: "/oracao", active: false },
+  { icon: Heart, label: "Contribuições", href: "/contribuicoes", active: false },
+  { icon: CircleUser, label: "Comunidade", href: "/comunidade", active: false },
+  { icon: User, label: "Meu Perfil", href: "/meu-perfil", active: false },
+  { icon: CalendarDays, label: "Minha Escala", href: "/minha-escala", active: false },
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const location = useLocation();
+
   return (
     <>
       {/* Overlay */}
@@ -52,24 +55,28 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="p-4 space-y-2">
-          {menuItems.map((item, index) => (
-            <a
-              key={index}
-              href={item.href}
-              className={cn(
-                "flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group",
-                item.active 
-                  ? "bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white shadow-lg backdrop-blur-sm" 
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
-              )}
-            >
-              <item.icon className={cn(
-                "w-5 h-5 transition-transform group-hover:scale-110",
-                item.active ? "text-white" : "text-white/70"
-              )} />
-              <span className="font-medium">{item.label}</span>
-            </a>
-          ))}
+          {menuItems.map((item, index) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={index}
+                to={item.href}
+                onClick={() => onClose()}
+                className={cn(
+                  "flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group",
+                  isActive 
+                    ? "bg-gradient-to-r from-blue-600/80 to-purple-600/80 text-white shadow-lg backdrop-blur-sm" 
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                )}
+              >
+                <item.icon className={cn(
+                  "w-5 h-5 transition-transform group-hover:scale-110",
+                  isActive ? "text-white" : "text-white/70"
+                )} />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Footer */}
