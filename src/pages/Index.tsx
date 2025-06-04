@@ -1,23 +1,23 @@
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useState } from "react";
+import { Sidebar } from "@/components/Sidebar";
 import { ModernTopBar } from "@/components/ModernTopBar";
 import { HeroSection } from "@/components/HeroSection";
 import { BentoGrid } from "@/components/BentoGrid";
 import { FloatingElements } from "@/components/FloatingElements";
 
 const Index = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 relative overflow-hidden">
       {/* Floating background elements */}
       <FloatingElements />
       
-      <div className="relative z-10">
-        <div className="flex items-center p-4">
-          <SidebarTrigger className="text-white hover:bg-white/10" />
-          <div className="flex-1">
-            <ModernTopBar onMenuClick={() => {}} />
-          </div>
-        </div>
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      
+      <div className="lg:ml-64 transition-all duration-300 relative z-10">
+        <ModernTopBar onMenuClick={() => setSidebarOpen(true)} />
         
         <main className="relative">
           {/* Hero Section */}

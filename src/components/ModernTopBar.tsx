@@ -1,5 +1,5 @@
 
-import { User, Bell, Search } from "lucide-react";
+import { Menu, User, Bell, Search } from "lucide-react";
 
 interface ModernTopBarProps {
   onMenuClick: () => void;
@@ -10,6 +10,13 @@ export function ModernTopBar({ onMenuClick }: ModernTopBarProps) {
     <header className="bg-black/20 backdrop-blur-xl border-b border-white/10 px-4 lg:px-8 py-4 sticky top-0 z-50">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
+          <button 
+            onClick={onMenuClick}
+            className="lg:hidden p-2 hover:bg-white/10 rounded-xl transition-all duration-300"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </button>
+          
           <div className="hidden lg:flex items-center space-x-3">
             <div className="relative">
               <Search className="w-4 h-4 text-white/60 absolute left-3 top-1/2 transform -translate-y-1/2" />
