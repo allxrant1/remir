@@ -130,7 +130,7 @@ const MinhaEscala = () => {
                       <span className="text-white/80 text-sm">{escala.funcao}</span>
                     </div>
                   </div>
-                  <Badge className={`${getStatusColor(escala.status)} text-white px-3 py-1 rounded-full text-xs`}>
+                  <Badge className={`${getStatusColor(escala.status)} text-white px-3 py-1 rounded-full text-xs border-none`}>
                     {getStatusText(escala.status)}
                   </Badge>
                 </div>
@@ -155,14 +155,14 @@ const MinhaEscala = () => {
                     <>
                       <Button 
                         size="sm"
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md"
+                        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md border-none"
                       >
                         Confirmar
                       </Button>
                       <Button 
                         size="sm" 
                         variant="outline"
-                        className="border-red-400/30 text-red-400 hover:bg-red-500/10 hover:border-red-400/50"
+                        className="border-red-400/30 text-red-400 hover:bg-red-500/10 hover:border-red-400/50 bg-transparent"
                       >
                         Recusar
                       </Button>
@@ -172,7 +172,7 @@ const MinhaEscala = () => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 bg-transparent"
                     >
                       Ver detalhes
                     </Button>
@@ -196,7 +196,7 @@ const MinhaEscala = () => {
             </div>
             <Button 
               size="sm"
-              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md"
+              className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md border-none"
             >
               Entrar em contato
             </Button>

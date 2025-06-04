@@ -85,7 +85,7 @@ const Mensagens = () => {
                 onClick={() => setActiveFilter(filter)}
                 className={`rounded-full font-medium transition-all duration-200 ${
                   activeFilter === filter
-                    ? "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-lg border-none"
                     : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30"
                 }`}
               >
@@ -135,7 +135,7 @@ const Mensagens = () => {
                     <div className="flex items-center space-x-3">
                       <Button 
                         size="sm"
-                        className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                        className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none"
                       >
                         <Play className="w-4 h-4 mr-1" />
                         Ouvir Agora
@@ -143,7 +143,7 @@ const Mensagens = () => {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="text-white/70 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30"
+                        className="text-white/70 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30 bg-transparent"
                       >
                         <Share2 className="w-4 h-4 mr-1" />
                         Compartilhar

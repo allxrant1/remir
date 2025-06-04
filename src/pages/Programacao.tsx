@@ -76,7 +76,7 @@ const Programacao = () => {
                 onClick={() => setActiveFilter(filter)}
                 className={`rounded-full font-medium transition-all duration-200 ${
                   activeFilter === filter
-                    ? "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg border-none"
                     : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30"
                 }`}
               >
@@ -88,7 +88,7 @@ const Programacao = () => {
 
         {/* Botão Adicionar */}
         <div className="mb-6">
-          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
+          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none">
             <Plus className="w-4 h-4 mr-2" />
             Adicionar Evento
           </Button>
@@ -102,7 +102,7 @@ const Programacao = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-white mb-2">{evento.titulo}</h3>
-                    <Badge className={`${getTypeColor(evento.tipo)} text-white rounded-full px-3 py-1 text-xs`}>
+                    <Badge className={`${getTypeColor(evento.tipo)} text-white rounded-full px-3 py-1 text-xs border-none`}>
                       {evento.tipo}
                     </Badge>
                   </div>
@@ -139,14 +139,14 @@ const Programacao = () => {
                 <div className="flex space-x-2">
                   <Button 
                     size="sm"
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md"
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md border-none"
                   >
                     Participar
                   </Button>
                   <Button 
                     size="sm" 
                     variant="outline"
-                    className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                    className="border-white/20 text-white hover:bg-white/10 hover:border-white/30 bg-transparent"
                   >
                     Lembrete
                   </Button>
@@ -162,7 +162,7 @@ const Programacao = () => {
             <CardContent className="p-6 text-center">
               <h3 className="text-xl font-bold text-white mb-2">Gerenciar Escala de Serviço</h3>
               <p className="text-white/70 mb-4">Organize e acompanhe sua participação nos ministérios</p>
-              <Button className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
+              <Button className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200 border-none">
                 Ver Minha Escala
               </Button>
             </CardContent>
