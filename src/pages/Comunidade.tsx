@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -183,9 +182,8 @@ const Comunidade = () => {
                     </div>
                     <p className="text-white/80 mb-4">{comunicado.conteudo}</p>
                     <Button 
-                      variant="outline" 
                       size="sm"
-                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                      className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
                     >
                       Ler mais
                     </Button>
@@ -206,9 +204,8 @@ const Comunidade = () => {
                     <h4 className="font-semibold text-white mb-1 text-sm">{foto.titulo}</h4>
                     <p className="text-xs text-white/60 mb-3">{foto.data}</p>
                     <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                      size="sm"
+                      className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
                     >
                       Ver fotos
                     </Button>

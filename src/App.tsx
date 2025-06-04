@@ -12,6 +12,7 @@ import Contribuicoes from "./pages/Contribuicoes";
 import Comunidade from "./pages/Comunidade";
 import MeuPerfil from "./pages/MeuPerfil";
 import MinhaEscala from "./pages/MinhaEscala";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/comunidade" element={<Comunidade />} />
           <Route path="/meu-perfil" element={<MeuPerfil />} />
           <Route path="/minha-escala" element={<MinhaEscala />} />
+          <Route path="/login" element={<Login />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
