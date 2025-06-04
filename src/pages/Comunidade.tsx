@@ -4,6 +4,7 @@ import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone } from "lucid
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const Comunidade = () => {
   const ministerios = [
@@ -93,7 +94,7 @@ const Comunidade = () => {
         {/* Banner de Título */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -105,33 +106,33 @@ const Comunidade = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="ministerios" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-xl border-white/20">
-            <TabsTrigger value="ministerios" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70">
+          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-xl border-white/20 h-12">
+            <TabsTrigger value="ministerios" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
               Ministérios
             </TabsTrigger>
-            <TabsTrigger value="comunicados" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70">
+            <TabsTrigger value="comunicados" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
               Comunicados
             </TabsTrigger>
-            <TabsTrigger value="galeria" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70">
+            <TabsTrigger value="galeria" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
               Galeria
             </TabsTrigger>
-            <TabsTrigger value="contatos" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70">
+            <TabsTrigger value="contatos" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
               Contatos
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="ministerios" className="mt-8">
-            <div className="grid gap-6">
+            <div className="grid gap-4">
               {ministerios.map((ministerio) => (
-                <Card key={ministerio.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300">
-                  <CardContent className="p-6">
+                <Card key={ministerio.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-[1.02] shadow-lg">
+                  <CardContent className="p-5">
                     <div className="flex items-start space-x-4">
-                      <div className="text-4xl">{ministerio.icon}</div>
+                      <div className="text-3xl">{ministerio.icon}</div>
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-white mb-2">{ministerio.nome}</h3>
-                        <p className="text-white/70 mb-4">{ministerio.descricao}</p>
+                        <h3 className="text-lg font-bold text-white mb-2">{ministerio.nome}</h3>
+                        <p className="text-white/70 mb-3 text-sm">{ministerio.descricao}</p>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm mb-4">
                           <div className="flex items-center space-x-2 text-white/80">
                             <User className="w-4 h-4" />
                             <span>Líder: {ministerio.lider}</span>
@@ -151,6 +152,13 @@ const Comunidade = () => {
                             </a>
                           </div>
                         </div>
+                        
+                        <Button 
+                          size="sm"
+                          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
+                        >
+                          Participar
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
@@ -160,20 +168,27 @@ const Comunidade = () => {
           </TabsContent>
 
           <TabsContent value="comunicados" className="mt-8">
-            <div className="space-y-6">
+            <div className="space-y-4">
               {comunicados.map((comunicado) => (
-                <Card key={comunicado.id} className="bg-white/10 backdrop-blur-xl border-white/20">
-                  <CardContent className="p-6">
+                <Card key={comunicado.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:scale-[1.01] transition-all duration-300 shadow-lg">
+                  <CardContent className="p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center space-x-3">
                         <h3 className="text-lg font-semibold text-white">{comunicado.titulo}</h3>
                         {comunicado.urgente && (
-                          <Badge className="bg-red-500 text-white">Urgente</Badge>
+                          <Badge className="bg-red-500 text-white px-2 py-1">Urgente</Badge>
                         )}
                       </div>
                       <span className="text-sm text-white/60">{comunicado.data}</span>
                     </div>
-                    <p className="text-white/80">{comunicado.conteudo}</p>
+                    <p className="text-white/80 mb-4">{comunicado.conteudo}</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                    >
+                      Ler mais
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -181,15 +196,22 @@ const Comunidade = () => {
           </TabsContent>
 
           <TabsContent value="galeria" className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {fotos.map((foto) => (
-                <Card key={foto.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300">
+                <Card key={foto.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105 shadow-lg">
                   <CardContent className="p-4">
-                    <div className="w-full h-48 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg mb-4 flex items-center justify-center">
-                      <Camera className="w-12 h-12 text-white/50" />
+                    <div className="w-full h-40 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg mb-3 flex items-center justify-center">
+                      <Camera className="w-10 h-10 text-white/50" />
                     </div>
-                    <h4 className="font-semibold text-white mb-1">{foto.titulo}</h4>
-                    <p className="text-sm text-white/60">{foto.data}</p>
+                    <h4 className="font-semibold text-white mb-1 text-sm">{foto.titulo}</h4>
+                    <p className="text-xs text-white/60 mb-3">{foto.data}</p>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="w-full border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                    >
+                      Ver fotos
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -197,14 +219,14 @@ const Comunidade = () => {
           </TabsContent>
 
           <TabsContent value="contatos" className="mt-8">
-            <div className="grid gap-6">
+            <div className="grid gap-4">
               {contatos.map((contato, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-xl border-white/20">
-                  <CardContent className="p-6">
+                <Card key={index} className="bg-white/10 backdrop-blur-xl border-white/20 hover:scale-[1.01] transition-all duration-300 shadow-lg">
+                  <CardContent className="p-5">
                     <h3 className="text-lg font-semibold text-white mb-1">{contato.nome}</h3>
                     <p className="text-green-300 mb-4">{contato.cargo}</p>
                     
-                    <div className="space-y-2">
+                    <div className="space-y-2 mb-4">
                       <div className="flex items-center space-x-3 text-white/80">
                         <Phone className="w-4 h-4" />
                         <a href={`tel:${contato.telefone}`} className="hover:text-white">
@@ -217,6 +239,24 @@ const Comunidade = () => {
                           {contato.email}
                         </a>
                       </div>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <Button 
+                        size="sm"
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md"
+                      >
+                        <Phone className="w-4 h-4 mr-1" />
+                        Ligar
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                      >
+                        <Mail className="w-4 h-4 mr-1" />
+                        Email
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>

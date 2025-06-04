@@ -50,7 +50,7 @@ const Mensagens = () => {
         {/* Banner de Título */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-600 rounded-xl flex items-center justify-center shadow-lg">
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -69,7 +69,7 @@ const Mensagens = () => {
               placeholder="Buscar mensagens..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-white/10 border-white/20 text-white placeholder-white/60 pl-10 rounded-full focus:ring-2 focus:ring-pink-400 focus:border-transparent"
+              className="bg-white/10 border-white/20 text-white placeholder-white/60 pl-10 rounded-full focus:ring-2 focus:ring-pink-400 focus:border-transparent h-11"
             />
           </div>
         </div>
@@ -81,11 +81,12 @@ const Mensagens = () => {
               <Button
                 key={filter}
                 variant={activeFilter === filter ? "default" : "outline"}
+                size="sm"
                 onClick={() => setActiveFilter(filter)}
-                className={`rounded-full ${
+                className={`rounded-full font-medium transition-all duration-200 ${
                   activeFilter === filter
-                    ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white"
-                    : "bg-white/10 text-white border-white/20 hover:bg-white/20"
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white shadow-lg"
+                    : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30"
                 }`}
               >
                 {filter}
@@ -95,35 +96,35 @@ const Mensagens = () => {
         </div>
 
         {/* Lista de Mensagens */}
-        <div className="grid gap-6">
+        <div className="grid gap-4">
           {mensagens.map((mensagem) => (
-            <Card key={mensagem.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row gap-6">
+            <Card key={mensagem.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-[1.01] shadow-lg">
+              <CardContent className="p-5">
+                <div className="flex flex-col md:flex-row gap-4">
                   {/* Thumbnail */}
-                  <div className="w-full md:w-48 h-32 bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl flex items-center justify-center">
-                    <Play className="w-8 h-8 text-white/70" />
+                  <div className="w-full md:w-40 h-28 bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl flex items-center justify-center">
+                    <Play className="w-6 h-6 text-white/70" />
                   </div>
 
                   {/* Conteúdo */}
                   <div className="flex-1">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-1">{mensagem.titulo}</h3>
-                        <p className="text-pink-300 font-semibold">{mensagem.pastor}</p>
+                        <h3 className="text-lg font-bold text-white mb-1">{mensagem.titulo}</h3>
+                        <p className="text-pink-300 font-semibold text-sm">{mensagem.pastor}</p>
                       </div>
                       <Button
                         variant="ghost"
                         size="icon"
                         className={`${
                           mensagem.favorito ? "text-yellow-400" : "text-white/50"
-                        } hover:text-yellow-400`}
+                        } hover:text-yellow-400 hover:bg-white/10`}
                       >
-                        <Star className={`w-5 h-5 ${mensagem.favorito ? "fill-current" : ""}`} />
+                        <Star className={`w-4 h-4 ${mensagem.favorito ? "fill-current" : ""}`} />
                       </Button>
                     </div>
 
-                    <div className="flex flex-wrap gap-4 text-sm text-white/70 mb-4">
+                    <div className="flex flex-wrap gap-3 text-xs text-white/70 mb-4">
                       <span>{mensagem.data}</span>
                       <span>•</span>
                       <span>{mensagem.duracao}</span>
@@ -132,12 +133,20 @@ const Mensagens = () => {
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <Button className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl">
-                        <Play className="w-4 h-4 mr-2" />
+                      <Button 
+                        size="sm"
+                        className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                      >
+                        <Play className="w-4 h-4 mr-1" />
                         Ouvir Agora
                       </Button>
-                      <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10">
-                        <Share2 className="w-4 h-4" />
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-white/70 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30"
+                      >
+                        <Share2 className="w-4 h-4 mr-1" />
+                        Compartilhar
                       </Button>
                     </div>
                   </div>

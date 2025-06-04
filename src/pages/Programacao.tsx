@@ -55,7 +55,7 @@ const Programacao = () => {
         {/* Banner de Título */}
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -72,11 +72,12 @@ const Programacao = () => {
               <Button
                 key={filter}
                 variant={activeFilter === filter ? "default" : "outline"}
+                size="sm"
                 onClick={() => setActiveFilter(filter)}
-                className={`rounded-full ${
+                className={`rounded-full font-medium transition-all duration-200 ${
                   activeFilter === filter
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                    : "bg-white/10 text-white border-white/20 hover:bg-white/20"
+                    ? "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                    : "bg-white/10 text-white border-white/20 hover:bg-white/20 hover:border-white/30"
                 }`}
               >
                 {filter}
@@ -87,53 +88,69 @@ const Programacao = () => {
 
         {/* Botão Adicionar */}
         <div className="mb-6">
-          <Button className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl">
+          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
             <Plus className="w-4 h-4 mr-2" />
             Adicionar Evento
           </Button>
         </div>
 
         {/* Lista de Eventos */}
-        <div className="grid gap-6">
+        <div className="grid gap-4">
           {eventos.map((evento) => (
-            <Card key={evento.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300">
-              <CardContent className="p-6">
+            <Card key={evento.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-[1.01] shadow-lg">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white mb-2">{evento.titulo}</h3>
-                    <Badge className={`${getTypeColor(evento.tipo)} text-white rounded-full px-3 py-1`}>
+                    <h3 className="text-lg font-bold text-white mb-2">{evento.titulo}</h3>
+                    <Badge className={`${getTypeColor(evento.tipo)} text-white rounded-full px-3 py-1 text-xs`}>
                       {evento.tipo}
                     </Badge>
                   </div>
-                  <div className="flex space-x-2">
-                    <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10">
+                  <div className="flex space-x-1">
+                    <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 h-8 w-8">
                       <Bell className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10">
+                    <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 h-8 w-8">
                       <Share2 className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
+                    <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-300 hover:bg-red-500/10 h-8 w-8">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div className="flex items-center space-x-2 text-white/80">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                  <div className="flex items-center space-x-2 text-white/80 text-sm">
                     <Calendar className="w-4 h-4" />
                     <span>{evento.data}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-white/80">
+                  <div className="flex items-center space-x-2 text-white/80 text-sm">
                     <Clock className="w-4 h-4" />
                     <span>{evento.hora}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-white/80">
+                  <div className="flex items-center space-x-2 text-white/80 text-sm">
                     <MapPin className="w-4 h-4" />
                     <span>{evento.local}</span>
                   </div>
                 </div>
 
-                <p className="text-white/70">{evento.descricao}</p>
+                <p className="text-white/70 mb-4 text-sm">{evento.descricao}</p>
+                
+                <div className="flex space-x-2">
+                  <Button 
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md"
+                  >
+                    Participar
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
+                  >
+                    Lembrete
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -141,11 +158,11 @@ const Programacao = () => {
 
         {/* Seção Gerenciar Escala */}
         <div className="mt-12">
-          <Card className="bg-gradient-to-r from-orange-500/20 to-pink-500/20 backdrop-blur-xl border-white/20">
+          <Card className="bg-gradient-to-r from-orange-500/20 to-pink-500/20 backdrop-blur-xl border-white/20 shadow-lg">
             <CardContent className="p-6 text-center">
               <h3 className="text-xl font-bold text-white mb-2">Gerenciar Escala de Serviço</h3>
               <p className="text-white/70 mb-4">Organize e acompanhe sua participação nos ministérios</p>
-              <Button className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white">
+              <Button className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200">
                 Ver Minha Escala
               </Button>
             </CardContent>
