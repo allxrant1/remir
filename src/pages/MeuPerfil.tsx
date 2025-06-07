@@ -1,31 +1,71 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User, Edit, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 const MeuPerfil = () => {
   const [editando, setEditando] = useState(false);
+  const { logout, user, isLoading, profileLoading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [dadosUsuario, setDadosUsuario] = useState({
-    nome: "Gustavo",
-    sobrenome: "Silva",
-    email: "meninosid@gmail.com",
-    telefone: "(11) 99999-9999",
-    dataNascimento: "1990-05-15",
-    endereco: "Rua das Flores, 123 - São Paulo, SP"
+    nome: "",
+    sobrenome: "",
+    email: "",
+    telefone: "",
+    dataNascimento: "",
+    endereco: ""
   });
+
+  useEffect(() => {
+    if (user) {
+      setDadosUsuario({
+        nome: user.name || "",
+        sobrenome: user.surname || "",
+        email: user.email || "",
+        telefone: user.phone || "",
+        dataNascimento: user.birthDate ? user.birthDate.toISOString().split('T')[0] : "",
+        endereco: user.address || ""
+      });
+    } else {
+      setDadosUsuario({
+        nome: "",
+        sobrenome: "",
+        email: "",
+        telefone: "",
+        dataNascimento: "",
+        endereco: ""
+      });
+    }
+  }, [user]);
+
+  if (isLoading || profileLoading) {
+    return <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 text-white flex items-center justify-center">Carregando dados do perfil...</div>;
+  }
+
+  if (!user && !isLoading && !profileLoading) {
+    navigate("/login");
+    return null;
+  }
 
   const handleSalvar = () => {
     setEditando(false);
-    // Aqui seria a lógica para salvar os dados
-    console.log("Dados salvos:", dadosUsuario);
+    console.log("Dados a serem salvos:", dadosUsuario);
   };
 
-  const handleSair = () => {
-    // Aqui seria a lógica para logout
-    console.log("Usuário deslogado");
+  const handleSair = async () => {
+    await logout();
+    toast({
+      title: "Logout realizado com sucesso!",
+      description: "Você foi desconectado da sua conta.",
+      duration: 3000,
+    });
+    navigate("/login");
   };
 
   return (

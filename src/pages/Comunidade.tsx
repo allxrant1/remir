@@ -1,11 +1,49 @@
 import { useState } from "react";
-import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone } from "lucide-react";
+import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Comunidade = () => {
+  const { role } = useAuth();
+
+  const [newComunicadoTitulo, setNewComunicadoTitulo] = useState("");
+  const [newComunicadoConteudo, setNewComunicadoConteudo] = useState("");
+  const [newComunicadoUrgente, setNewComunicadoUrgente] = useState(false);
+
+  const [newFotoTitulo, setNewFotoTitulo] = useState("");
+  const [newFotoFile, setNewFotoFile] = useState<File | null>(null);
+
+  const handleAddComunicado = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Novo Comunicado:", {
+      titulo: newComunicadoTitulo,
+      conteudo: newComunicadoConteudo,
+      urgente: newComunicadoUrgente,
+    });
+    // Lógica para adicionar o comunicado ao banco de dados viria aqui
+    setNewComunicadoTitulo("");
+    setNewComunicadoConteudo("");
+    setNewComunicadoUrgente(false);
+  };
+
+  const handleAddFoto = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Nova Foto:", {
+      titulo: newFotoTitulo,
+      file: newFotoFile?.name,
+    });
+    // Lógica para adicionar a foto ao banco de dados viria aqui
+    setNewFotoTitulo("");
+    setNewFotoFile(null);
+  };
+
   const ministerios = [
     {
       id: 1,
@@ -167,6 +205,52 @@ const Comunidade = () => {
           </TabsContent>
 
           <TabsContent value="comunicados" className="mt-8">
+            {role === 'social_media' && (
+              <Card className="bg-white/10 backdrop-blur-xl border-white/20 mb-8">
+                <CardContent className="p-6">
+                   <h3 className="text-lg font-semibold text-white mb-4">Adicionar Novo Comunicado</h3>
+                   <form onSubmit={handleAddComunicado} className="space-y-4">
+                     <div>
+                       <Label htmlFor="comunicadoTitulo" className="text-white/80 mb-2 block">Título</Label>
+                       <Input
+                         id="comunicadoTitulo"
+                         placeholder="Título do comunicado"
+                         value={newComunicadoTitulo}
+                         onChange={(e) => setNewComunicadoTitulo(e.target.value)}
+                         className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500"
+                       />
+                     </div>
+                     <div>
+                       <Label htmlFor="comunicadoConteudo" className="text-white/80 mb-2 block">Conteúdo</Label>
+                       <Textarea
+                         id="comunicadoConteudo"
+                         placeholder="Conteúdo detalhado do comunicado"
+                         value={newComunicadoConteudo}
+                         onChange={(e) => setNewComunicadoConteudo(e.target.value)}
+                         className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500 min-h-[100px]"
+                       />
+                     </div>
+                     <div className="flex items-center space-x-2">
+                       <Switch
+                         id="comunicadoUrgente"
+                         checked={newComunicadoUrgente}
+                         onCheckedChange={setNewComunicadoUrgente}
+                         className="data-[state=checked]:bg-red-500 data-[state=unchecked]:bg-gray-400"
+                       />
+                       <Label htmlFor="comunicadoUrgente" className="text-white/80">Marcar como Urgente</Label>
+                     </div>
+                     <Button
+                       type="submit"
+                       className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white w-full py-2"
+                     >
+                       <Plus className="w-4 h-4 mr-2" />
+                       Adicionar Comunicado
+                     </Button>
+                   </form>
+                </CardContent>
+              </Card>
+            )}
+
             <div className="space-y-4">
               {comunicados.map((comunicado) => (
                 <Card key={comunicado.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:scale-[1.01] transition-all duration-300 shadow-lg">
@@ -194,6 +278,43 @@ const Comunidade = () => {
           </TabsContent>
 
           <TabsContent value="galeria" className="mt-8">
+            {role === 'social_media' && (
+               <Card className="bg-white/10 backdrop-blur-xl border-white/20 mb-8">
+                 <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">Adicionar Nova Foto</h3>
+                    <form onSubmit={handleAddFoto} className="space-y-4">
+                      <div>
+                        <Label htmlFor="fotoTitulo" className="text-white/80 mb-2 block">Título da Foto</Label>
+                        <Input
+                          id="fotoTitulo"
+                          placeholder="Título da foto (ex: Culto de Natal)"
+                          value={newFotoTitulo}
+                          onChange={(e) => setNewFotoTitulo(e.target.value)}
+                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="fotoArquivo" className="text-white/80 mb-2 block">Arquivo de Imagem</Label>
+                        <Input
+                          id="fotoArquivo"
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => setNewFotoFile(e.target.files ? e.target.files[0] : null)}
+                          className="bg-white/10 border-white/20 text-white file:text-green-400 file:bg-transparent file:border-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:text-sm file:font-semibold hover:file:bg-white/5"
+                        />
+                      </div>
+                      <Button
+                        type="submit"
+                        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white w-full py-2"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Adicionar Foto
+                      </Button>
+                    </form>
+                 </CardContent>
+               </Card>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {fotos.map((foto) => (
                 <Card key={foto.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105 shadow-lg">

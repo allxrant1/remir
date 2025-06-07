@@ -1,44 +1,132 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Programacao from "./pages/Programacao";
-import Mensagens from "./pages/Mensagens";
-import Oracao from "./pages/Oracao";
-import Contribuicoes from "./pages/Contribuicoes";
-import Comunidade from "./pages/Comunidade";
-import MeuPerfil from "./pages/MeuPerfil";
-import MinhaEscala from "./pages/MinhaEscala";
-import Login from "./pages/Login";
-import NotFound from "./pages/NotFound";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { PrivateRoute } from "@/components/PrivateRoute";
+import { Layout } from "@/components/Layout";
+import { AuthLayout } from "@/components/AuthLayout";
 
-const queryClient = new QueryClient();
+// Páginas
+import Index from "@/pages/Index";
+import Programacao from "@/pages/Programacao";
+import Mensagens from "@/pages/Mensagens";
+import Oracao from "@/pages/Oracao";
+import Contribuicoes from "@/pages/Contribuicoes";
+import Comunidade from "@/pages/Comunidade";
+import MeuPerfil from "@/pages/MeuPerfil";
+import MinhaEscala from "@/pages/MinhaEscala";
+import Login from "@/pages/Login";
+import Cadastro from "@/pages/Cadastro";
+import RecuperarSenha from "@/pages/RecuperarSenha";
+import NotFound from "@/pages/NotFound";
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/programacao" element={<Programacao />} />
-          <Route path="/mensagens" element={<Mensagens />} />
-          <Route path="/oracao" element={<Oracao />} />
-          <Route path="/contribuicoes" element={<Contribuicoes />} />
-          <Route path="/comunidade" element={<Comunidade />} />
-          <Route path="/meu-perfil" element={<MeuPerfil />} />
-          <Route path="/minha-escala" element={<MinhaEscala />} />
-          <Route path="/login" element={<Login />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-export default App;
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Rotas de autenticação com Layout de auth */}
+              <Route element={<AuthLayout />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/cadastro" element={<Cadastro />} />
+                <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+              </Route>
+
+              {/* Rotas protegidas com Layout principal */}
+              <Route element={<Layout />}>
+                {/* Rotas públicas */}
+                <Route path="/" element={<Index />} />
+                <Route path="/programacao" element={<Programacao />} />
+                <Route path="/mensagens" element={<Mensagens />} />
+                <Route path="/contribuicoes" element={<Contribuicoes />} />
+                <Route path="/comunidade" element={<Comunidade />} />
+
+                {/* Rotas para membros */}
+                <Route
+                  path="/oracao"
+                  element={
+                    <PrivateRoute
+                      allowedRoles={[
+                        "member",
+                        "ministry_user",
+                        "ministry_leader",
+                        "social_media",
+                      ]}
+                    >
+                      <Oracao />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/meu-perfil"
+                  element={
+                    <PrivateRoute
+                      allowedRoles={[
+                        "member",
+                        "ministry_user",
+                        "ministry_leader",
+                        "social_media",
+                      ]}
+                    >
+                      <MeuPerfil />
+                    </PrivateRoute>
+                  }
+                />
+
+                {/* Rotas para usuários de ministério */}
+                <Route
+                  path="/minha-escala"
+                  element={
+                    <PrivateRoute
+                      allowedRoles={["ministry_user", "ministry_leader"]}
+                    >
+                      <MinhaEscala />
+                    </PrivateRoute>
+                  }
+                />
+
+                {/* Rotas para líderes de ministério */}
+                <Route
+                  path="/gestao-ministerio"
+                  element={
+                    <PrivateRoute allowedRoles={["ministry_leader"]}>
+                      <div>Gestão de Ministério</div>
+                    </PrivateRoute>
+                  }
+                />
+
+                {/* Rotas para social media */}
+                <Route
+                  path="/gestao-conteudo"
+                  element={
+                    <PrivateRoute allowedRoles={["social_media"]}>
+                      <div>Gestão de Conteúdo</div>
+                    </PrivateRoute>
+                  }
+                />
+              </Route>
+
+              {/* Rota 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}

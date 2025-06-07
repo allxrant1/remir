@@ -1,14 +1,15 @@
-
 import { useState } from "react";
 import { Hand, Plus, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Oracao = () => {
   const [nome, setNome] = useState("");
   const [pedido, setPedido] = useState("");
+  const { role } = useAuth();
 
   const pedidosComunidade = [
     {
@@ -84,9 +85,11 @@ const Oracao = () => {
             <TabsTrigger value="agenda" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white text-white/70">
               Agenda
             </TabsTrigger>
-            <TabsTrigger value="moderacao" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white text-white/70">
-              Moderação
-            </TabsTrigger>
+            {role === 'social_media' && (
+              <TabsTrigger value="moderacao" className="data-[state=active]:bg-purple-500 data-[state=active]:text-white text-white/70">
+                Moderação
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="pedidos" className="mt-8">
@@ -176,14 +179,16 @@ const Oracao = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="moderacao" className="mt-8">
-            <Card className="bg-white/10 backdrop-blur-xl border-white/20">
-              <CardContent className="p-6 text-center">
-                <h3 className="text-lg font-semibold text-white mb-4">Moderação</h3>
-                <p className="text-white/70">Área restrita para líderes e moderadores.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
+          {role === 'social_media' && (
+            <TabsContent value="moderacao" className="mt-8">
+              <Card className="bg-white/10 backdrop-blur-xl border-white/20">
+                <CardContent className="p-6 text-center">
+                  <h3 className="text-lg font-semibold text-white mb-4">Moderação</h3>
+                  <p className="text-white/70">Área restrita para líderes e moderadores.</p>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </div>
