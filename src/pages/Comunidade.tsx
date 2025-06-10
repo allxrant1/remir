@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus } from "lucide-react";
+import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus, Heart, Check, Lightbulb, Image, BellRing, PhoneCall } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,9 +8,49 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Componente de partículas flutuantes (reutilizado)
+const FloatingParticles = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-blue-400/20"
+          initial={{
+            x: Math.random() * 100 + "%",
+            y: Math.random() * 100 + "%",
+            scale: Math.random() * 0.5 + 0.5,
+            opacity: Math.random() * 0.5 + 0.3,
+          }}
+          animate={{
+            y: [
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+              Math.random() * 100 + "%",
+            ],
+            opacity: [
+              Math.random() * 0.3 + 0.2,
+              Math.random() * 0.5 + 0.3,
+              Math.random() * 0.3 + 0.2,
+            ],
+          }}
+          transition={{
+            duration: Math.random() * 20 + 15,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const Comunidade = () => {
   const { role } = useAuth();
+
+  const [activeFilter, setActiveFilter] = useState("ministerios");
 
   const [newComunicadoTitulo, setNewComunicadoTitulo] = useState("");
   const [newComunicadoConteudo, setNewComunicadoConteudo] = useState("");
@@ -48,7 +87,7 @@ const Comunidade = () => {
     {
       id: 1,
       nome: "Ministério de Louvor",
-      icon: "🎵",
+      icon: <Lightbulb className="w-6 h-6" />,
       lider: "Ana Silva",
       membros: 15,
       cronograma: "Domingos 18h",
@@ -58,7 +97,7 @@ const Comunidade = () => {
     {
       id: 2,
       nome: "Ministério Infantil",
-      icon: "👶",
+      icon: <Users className="w-6 h-6" />,
       lider: "Carlos Santos",
       membros: 8,
       cronograma: "Domingos 19h",
@@ -68,7 +107,7 @@ const Comunidade = () => {
     {
       id: 3,
       nome: "Ministério de Jovens",
-      icon: "🏃",
+      icon: <User className="w-6 h-6" />,
       lider: "Pedro Costa",
       membros: 22,
       cronograma: "Sábados 19h",
@@ -78,7 +117,7 @@ const Comunidade = () => {
     {
       id: 4,
       nome: "Ministério de Intercessão",
-      icon: "🙏",
+      icon: <Heart className="w-6 h-6" />,
       lider: "Maria Oliveira",
       membros: 12,
       cronograma: "Terças 20h",
@@ -105,9 +144,9 @@ const Comunidade = () => {
   ];
 
   const fotos = [
-    { id: 1, titulo: "Culto de Ação de Graças", data: "15 Nov 2024" },
-    { id: 2, titulo: "Batismo na Praia", data: "10 Nov 2024" },
-    { id: 3, titulo: "Encontro de Jovens", data: "5 Nov 2024" }
+    { id: 1, titulo: "Culto de Ação de Graças", data: "15 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=Culto" },
+    { id: 2, titulo: "Batismo na Praia", data: "10 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/50E3C2/FFFFFF?text=Batismo" },
+    { id: 3, titulo: "Encontro de Jovens", data: "5 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/F5A623/FFFFFF?text=Jovens" }
   ];
 
   const contatos = [
@@ -125,50 +164,77 @@ const Comunidade = () => {
     }
   ];
 
+  const filters = [
+    { id: "ministerios", label: "Ministérios", icon: <Users className="w-4 h-4" /> },
+    { id: "comunicados", label: "Comunicados", icon: <BellRing className="w-4 h-4" /> },
+    { id: "galeria", label: "Galeria", icon: <Camera className="w-4 h-4" /> },
+    { id: "contatos", label: "Contatos", icon: <PhoneCall className="w-4 h-4" /> },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
-      <div className="px-4 lg:px-8 py-8">
-        {/* Banner de Título */}
-        <div className="mb-8">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#1E293B] relative overflow-hidden">
+      {/* Partículas de fundo */}
+      <FloatingParticles />
+
+      {/* Conteúdo principal */}
+      <div className="relative z-10 px-4 lg:px-8 py-8 max-w-6xl mx-auto">
+        {/* Cabeçalho */}
+        <motion.div
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex items-center space-x-4 mb-2">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Comunidade</h1>
-              <p className="text-white/70">Unidos como uma grande família em Cristo</p>
+              <h1 className="text-3xl font-bold text-white tracking-tight">Comunidade</h1>
+              <p className="text-white/60 text-sm">Unidos como uma grande família em Cristo</p>
             </div>
           </div>
+          <div className="mt-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+        </motion.div>
+
+        {/* Filtros */}
+        <div className="flex flex-wrap gap-2 mb-8 justify-center sm:justify-start">
+          {filters.map((filter) => (
+            <motion.button
+              key={filter.id}
+              onClick={() => setActiveFilter(filter.id)}
+              className={`flex items-center px-4 py-2 rounded-full transition-all duration-300 ${
+                activeFilter === filter.id
+                  ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/20"
+                  : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="mr-2">{filter.icon}</span>
+              {filter.label}
+            </motion.button>
+          ))}
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="ministerios" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-xl border-white/20 h-12">
-            <TabsTrigger value="ministerios" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
-              Ministérios
-            </TabsTrigger>
-            <TabsTrigger value="comunicados" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
-              Comunicados
-            </TabsTrigger>
-            <TabsTrigger value="galeria" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
-              Galeria
-            </TabsTrigger>
-            <TabsTrigger value="contatos" className="data-[state=active]:bg-green-500 data-[state=active]:text-white text-white/70 font-medium">
-              Contatos
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="ministerios" className="mt-8">
-            <div className="grid gap-4">
-              {ministerios.map((ministerio) => (
-                <Card key={ministerio.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-[1.02] shadow-lg">
+        {/* Conteúdo Condicional */}
+        {activeFilter === "ministerios" && (
+          <div className="grid gap-4">
+            {ministerios.map((ministerio, index) => (
+              <motion.div
+                key={ministerio.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/8 transition-all duration-300 hover:scale-[1.01] shadow-lg">
                   <CardContent className="p-5">
-                    <div className="flex items-start space-x-4">
-                      <div className="text-3xl">{ministerio.icon}</div>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                      <div className="text-3xl text-blue-400">{ministerio.icon}</div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-white mb-2">{ministerio.nome}</h3>
                         <p className="text-white/70 mb-3 text-sm">{ministerio.descricao}</p>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm mb-4">
                           <div className="flex items-center space-x-2 text-white/80">
                             <User className="w-4 h-4" />
@@ -182,206 +248,213 @@ const Comunidade = () => {
                             <Calendar className="w-4 h-4" />
                             <span>{ministerio.cronograma}</span>
                           </div>
-                          <div className="flex items-center space-x-2 text-green-300">
+                          <div className="flex items-center space-x-2 text-white/80">
                             <Mail className="w-4 h-4" />
                             <a href={`mailto:${ministerio.email}`} className="hover:underline">
                               {ministerio.email}
                             </a>
                           </div>
                         </div>
-                        
-                        <Button 
-                          size="sm"
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
-                        >
-                          Participar
-                        </Button>
+
+                        <div className="flex justify-end">
+                          <Button
+                            size="sm"
+                            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none"
+                          >
+                            <MessageSquare className="w-4 h-4 mr-1" />
+                            Entrar em Contato
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </TabsContent>
+              </motion.div>
+            ))}
+          </div>
+        )}
 
-          <TabsContent value="comunicados" className="mt-8">
-            {role === 'social_media' && (
-              <Card className="bg-white/10 backdrop-blur-xl border-white/20 mb-8">
-                <CardContent className="p-6">
-                   <h3 className="text-lg font-semibold text-white mb-4">Adicionar Novo Comunicado</h3>
-                   <form onSubmit={handleAddComunicado} className="space-y-4">
-                     <div>
-                       <Label htmlFor="comunicadoTitulo" className="text-white/80 mb-2 block">Título</Label>
-                       <Input
-                         id="comunicadoTitulo"
-                         placeholder="Título do comunicado"
-                         value={newComunicadoTitulo}
-                         onChange={(e) => setNewComunicadoTitulo(e.target.value)}
-                         className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500"
-                       />
-                     </div>
-                     <div>
-                       <Label htmlFor="comunicadoConteudo" className="text-white/80 mb-2 block">Conteúdo</Label>
-                       <Textarea
-                         id="comunicadoConteudo"
-                         placeholder="Conteúdo detalhado do comunicado"
-                         value={newComunicadoConteudo}
-                         onChange={(e) => setNewComunicadoConteudo(e.target.value)}
-                         className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500 min-h-[100px]"
-                       />
-                     </div>
-                     <div className="flex items-center space-x-2">
-                       <Switch
-                         id="comunicadoUrgente"
-                         checked={newComunicadoUrgente}
-                         onCheckedChange={setNewComunicadoUrgente}
-                         className="data-[state=checked]:bg-red-500 data-[state=unchecked]:bg-gray-400"
-                       />
-                       <Label htmlFor="comunicadoUrgente" className="text-white/80">Marcar como Urgente</Label>
-                     </div>
-                     <Button
-                       type="submit"
-                       className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white w-full py-2"
-                     >
-                       <Plus className="w-4 h-4 mr-2" />
-                       Adicionar Comunicado
-                     </Button>
-                   </form>
-                </CardContent>
-              </Card>
+        {activeFilter === "comunicados" && (
+          <div className="space-y-6">
+            {role === "social_media" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white/5 backdrop-blur-xl border-white/10 rounded-xl p-6 shadow-lg"
+              >
+                <h2 className="text-xl font-bold text-white mb-4">Novo Comunicado</h2>
+                <form onSubmit={handleAddComunicado} className="space-y-4">
+                  <div>
+                    <Label htmlFor="comunicadoTitulo" className="text-white/80">Título</Label>
+                    <Input
+                      id="comunicadoTitulo"
+                      value={newComunicadoTitulo}
+                      onChange={(e) => setNewComunicadoTitulo(e.target.value)}
+                      placeholder="Título do comunicado"
+                      className="bg-white/5 border-white/10 text-white placeholder-white/40 focus:ring-blue-500/50 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="comunicadoConteudo" className="text-white/80">Conteúdo</Label>
+                    <Textarea
+                      id="comunicadoConteudo"
+                      value={newComunicadoConteudo}
+                      onChange={(e) => setNewComunicadoConteudo(e.target.value)}
+                      placeholder="Detalhes do comunicado"
+                      className="bg-white/5 border-white/10 text-white placeholder-white/40 focus:ring-blue-500/50 focus:border-transparent min-h-[100px]"
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="urgente" className="text-white/80">Urgente</Label>
+                    <Switch
+                      id="urgente"
+                      checked={newComunicadoUrgente}
+                      onCheckedChange={setNewComunicadoUrgente}
+                      className="data-[state=checked]:bg-blue-500 data-[state=unchecked]:bg-white/20"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none"
+                  >
+                    Adicionar Comunicado
+                  </Button>
+                </form>
+              </motion.div>
+            )}
+            
+            {comunicados.map((comunicado, index) => (
+              <motion.div
+                key={comunicado.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/8 transition-all duration-300 hover:scale-[1.01] shadow-lg overflow-hidden">
+                  <CardContent className="p-5">
+                    <div className="flex items-start space-x-4">
+                      <div className="text-blue-400 mt-1">
+                        <BellRing className="w-6 h-6" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-2">
+                          <h3 className="text-lg font-bold text-white">{comunicado.titulo}</h3>
+                          {comunicado.urgente && (
+                            <Badge className="bg-red-500/20 text-red-400 border-red-400/50 px-2 py-0.5 rounded-full">
+                              Urgente
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-white/70 text-sm mb-2">{comunicado.conteudo}</p>
+                        <p className="text-white/50 text-xs">Publicado em {comunicado.data}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {activeFilter === "galeria" && (
+          <div className="space-y-6">
+            {role === "social_media" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white/5 backdrop-blur-xl border-white/10 rounded-xl p-6 shadow-lg"
+              >
+                <h2 className="text-xl font-bold text-white mb-4">Adicionar Nova Foto</h2>
+                <form onSubmit={handleAddFoto} className="space-y-4">
+                  <div>
+                    <Label htmlFor="fotoTitulo" className="text-white/80">Título da Foto</Label>
+                    <Input
+                      id="fotoTitulo"
+                      value={newFotoTitulo}
+                      onChange={(e) => setNewFotoTitulo(e.target.value)}
+                      placeholder="Nome da foto"
+                      className="bg-white/5 border-white/10 text-white placeholder-white/40 focus:ring-blue-500/50 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="fotoFile" className="text-white/80">Arquivo da Imagem</Label>
+                    <Input
+                      id="fotoFile"
+                      type="file"
+                      onChange={(e) => setNewFotoFile(e.target.files ? e.target.files[0] : null)}
+                      className="bg-white/5 border-white/10 text-white placeholder-white/40 focus:ring-blue-500/50 focus:border-transparent file:text-white file:bg-white/10 file:rounded-full file:border-none file:px-4 file:py-2 hover:file:bg-white/20"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none"
+                  >
+                    Adicionar Foto
+                  </Button>
+                </form>
+              </motion.div>
             )}
 
-            <div className="space-y-4">
-              {comunicados.map((comunicado) => (
-                <Card key={comunicado.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:scale-[1.01] transition-all duration-300 shadow-lg">
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-3">
-                        <h3 className="text-lg font-semibold text-white">{comunicado.titulo}</h3>
-                        {comunicado.urgente && (
-                          <Badge className="bg-red-500 text-white px-2 py-1">Urgente</Badge>
-                        )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+              {fotos.map((foto, index) => (
+                <motion.div
+                  key={foto.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                >
+                  <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/8 transition-all duration-300 hover:scale-[1.01] shadow-lg overflow-hidden">
+                    <CardContent className="p-3">
+                      <div className="relative w-full h-40 bg-gray-700 rounded-lg overflow-hidden mb-3">
+                        <img src={foto.imageUrl} alt={foto.titulo} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-3">
+                          <h3 className="text-white font-semibold text-lg leading-tight">{foto.titulo}</h3>
+                        </div>
                       </div>
-                      <span className="text-sm text-white/60">{comunicado.data}</span>
-                    </div>
-                    <p className="text-white/80 mb-4">{comunicado.conteudo}</p>
-                    <Button 
-                      size="sm"
-                      className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
-                    >
-                      Ler mais
-                    </Button>
-                  </CardContent>
-                </Card>
+                      <p className="text-white/60 text-sm">{foto.data}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               ))}
             </div>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="galeria" className="mt-8">
-            {role === 'social_media' && (
-               <Card className="bg-white/10 backdrop-blur-xl border-white/20 mb-8">
-                 <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold text-white mb-4">Adicionar Nova Foto</h3>
-                    <form onSubmit={handleAddFoto} className="space-y-4">
-                      <div>
-                        <Label htmlFor="fotoTitulo" className="text-white/80 mb-2 block">Título da Foto</Label>
-                        <Input
-                          id="fotoTitulo"
-                          placeholder="Título da foto (ex: Culto de Natal)"
-                          value={newFotoTitulo}
-                          onChange={(e) => setNewFotoTitulo(e.target.value)}
-                          className="bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-green-500 focus:border-green-500"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="fotoArquivo" className="text-white/80 mb-2 block">Arquivo de Imagem</Label>
-                        <Input
-                          id="fotoArquivo"
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setNewFotoFile(e.target.files ? e.target.files[0] : null)}
-                          className="bg-white/10 border-white/20 text-white file:text-green-400 file:bg-transparent file:border-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:text-sm file:font-semibold hover:file:bg-white/5"
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white w-full py-2"
-                      >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Adicionar Foto
-                      </Button>
-                    </form>
-                 </CardContent>
-               </Card>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {fotos.map((foto) => (
-                <Card key={foto.id} className="bg-white/10 backdrop-blur-xl border-white/20 hover:bg-white/15 transition-all duration-300 hover:scale-105 shadow-lg">
-                  <CardContent className="p-4">
-                    <div className="w-full h-40 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg mb-3 flex items-center justify-center">
-                      <Camera className="w-10 h-10 text-white/50" />
-                    </div>
-                    <h4 className="font-semibold text-white mb-1 text-sm">{foto.titulo}</h4>
-                    <p className="text-xs text-white/60 mb-3">{foto.data}</p>
-                    <Button 
-                      size="sm"
-                      className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
-                    >
-                      Ver fotos
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="contatos" className="mt-8">
-            <div className="grid gap-4">
-              {contatos.map((contato, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-xl border-white/20 hover:scale-[1.01] transition-all duration-300 shadow-lg">
+        {activeFilter === "contatos" && (
+          <div className="grid gap-4 md:grid-cols-2">
+            {contatos.map((contato, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <Card className="bg-white/5 backdrop-blur-xl border-white/10 hover:bg-white/8 transition-all duration-300 hover:scale-[1.01] shadow-lg">
                   <CardContent className="p-5">
-                    <h3 className="text-lg font-semibold text-white mb-1">{contato.nome}</h3>
-                    <p className="text-green-300 mb-4">{contato.cargo}</p>
-                    
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center space-x-3 text-white/80">
+                    <h3 className="text-lg font-bold text-white mb-2">{contato.nome}</h3>
+                    <p className="text-blue-300 font-semibold text-sm mb-3">{contato.cargo}</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 text-white/70">
                         <Phone className="w-4 h-4" />
-                        <a href={`tel:${contato.telefone}`} className="hover:text-white">
+                        <a href={`tel:${contato.telefone}`} className="hover:underline">
                           {contato.telefone}
                         </a>
                       </div>
-                      <div className="flex items-center space-x-3 text-white/80">
+                      <div className="flex items-center space-x-2 text-white/70">
                         <Mail className="w-4 h-4" />
-                        <a href={`mailto:${contato.email}`} className="hover:text-white">
+                        <a href={`mailto:${contato.email}`} className="hover:underline">
                           {contato.email}
                         </a>
                       </div>
                     </div>
-                    
-                    <div className="flex space-x-2">
-                      <Button 
-                        size="sm"
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md"
-                      >
-                        <Phone className="w-4 h-4 mr-1" />
-                        Ligar
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        className="border-white/20 text-white hover:bg-white/10 hover:border-white/30"
-                      >
-                        <Mail className="w-4 h-4 mr-1" />
-                        Email
-                      </Button>
-                    </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
