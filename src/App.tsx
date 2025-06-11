@@ -2,11 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet, Link } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { Layout } from "@/components/Layout";
 import { AuthLayout } from "@/components/AuthLayout";
+import { Button } from "./components/ui/button";
+import { CalendarIcon, HomeIcon, UsersIcon } from "lucide-react";
 
 // Páginas
 import Index from "@/pages/Index";
@@ -106,16 +108,6 @@ export default function App() {
                   element={
                     <PrivateRoute allowedRoles={["ministry_leader"]}>
                       <div>Gestão de Ministério</div>
-                    </PrivateRoute>
-                  }
-                />
-
-                {/* Rotas para social media */}
-                <Route
-                  path="/gestao-conteudo"
-                  element={
-                    <PrivateRoute allowedRoles={["social_media"]}>
-                      <div>Gestão de Conteúdo</div>
                     </PrivateRoute>
                   }
                 />

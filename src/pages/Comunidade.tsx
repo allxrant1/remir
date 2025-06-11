@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus, Heart, Check, Lightbulb, Image, BellRing, PhoneCall } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -50,6 +50,8 @@ const FloatingParticles = () => {
 const Comunidade = () => {
   const { role } = useAuth();
 
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref para o input de arquivo
+
   const [activeFilter, setActiveFilter] = useState("ministerios");
 
   const [newComunicadoTitulo, setNewComunicadoTitulo] = useState("");
@@ -81,6 +83,16 @@ const Comunidade = () => {
     // Lógica para adicionar a foto ao banco de dados viria aqui
     setNewFotoTitulo("");
     setNewFotoFile(null);
+  };
+
+  const handleFileButtonClick = () => {
+    fileInputRef.current?.click(); // Aciona o clique no input de arquivo oculto
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewFotoFile(e.target.files[0]);
+    }
   };
 
   const ministerios = [
@@ -380,12 +392,29 @@ const Comunidade = () => {
                   </div>
                   <div>
                     <Label htmlFor="fotoFile" className="text-white/80">Arquivo da Imagem</Label>
-                    <Input
-                      id="fotoFile"
-                      type="file"
-                      onChange={(e) => setNewFotoFile(e.target.files ? e.target.files[0] : null)}
-                      className="bg-white/5 border-white/10 text-white placeholder-white/40 focus:ring-blue-500/50 focus:border-transparent file:text-white file:bg-white/10 file:rounded-full file:border-none file:px-4 file:py-2 hover:file:bg-white/20"
-                    />
+                    <div className="flex items-center gap-4">
+                      <Input
+                        id="fotoFile"
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                      <Button
+                        type="button"
+                        onClick={handleFileButtonClick}
+                        variant="outline"
+                        className="flex items-center px-6 py-3 rounded-lg bg-white/10 text-white/80 hover:bg-white/20 transition-colors duration-200 whitespace-nowrap flex-shrink-0"
+                      >
+                        <Image className="mr-2 h-4 w-4" />
+                        Escolher arquivo
+                      </Button>
+                      {newFotoFile && (
+                        <span className="text-white/70 text-sm flex-grow">
+                          {newFotoFile.name}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <Button
                     type="submit"

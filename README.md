@@ -1,73 +1,79 @@
-# Welcome to your Lovable project
+# Welcome to your Remir project
 
-## Project info
+This project was generated from a template.
 
-**URL**: https://lovable.dev/projects/b6f88ca8-23f3-4877-a2ff-84f227dad960
+**URL**: 
 
-## How can I edit this code?
+This project uses Vite for development and building.
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
+To get started with the project, follow these steps:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b6f88ca8-23f3-4877-a2ff-84f227dad960) and start prompting.
+1.  **Clone the repository**
 
-Changes made via Lovable will be committed automatically to this repo.
+    ```bash
+    git clone [your-repo-url]
+    cd remir-design-system
+    ```
 
-**Use your preferred IDE**
+2.  **Install dependencies**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+    ```bash
+    npm install # or yarn install or pnpm install
+    ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+3.  **Run the development server**
 
-Follow these steps:
+    ```bash
+    npm run dev # or yarn dev or pnpm dev
+    ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+    This will start the development server at `http://localhost:8080`.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Project Structure
 
-# Step 3: Install the necessary dependencies.
-npm i
+Your project is structured as follows:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+.github/
+src/
+  assets/
+  components/
+  contexts/
+  hooks/
+  pages/
+  routes/
+  services/
+  types/
+  App.tsx
+  main.tsx
+  index.css
+public/
+.env
+.gitignore
+index.html
+package.json
+postcss.config.js
+tailwind.config.js
+tsconfig.json
+vite.config.ts
 ```
 
-**Edit a file directly in GitHub**
+## Building for Production
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+To build the project for production, run:
 
-**Use GitHub Codespaces**
+```bash
+npm run build # or yarn build or pnpm build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+This will create a `dist` directory with your production-ready files.
 
-## What technologies are used for this project?
+## Deployment
 
-This project is built with:
+To deploy your project, you can use any static hosting service.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Can I connect a custom domain to my project?
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b6f88ca8-23f3-4877-a2ff-84f227dad960) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Yes, you can! This project is a standard web application, so you can deploy it to any hosting provider and connect a custom domain as you would with any other web project.

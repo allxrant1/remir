@@ -1,4 +1,4 @@
-import { X, Home, Calendar, MessageSquare, User, Heart, CircleUser, CalendarDays, Settings, Users, FileText, LogIn, UserPlus } from "lucide-react";
+import { X, Home, Calendar, MessageSquare, User, Heart, CircleUser, CalendarDays, Settings, Users, LogIn, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -26,7 +26,6 @@ const authenticatedMenuItems: MenuItem[] = [
   { icon: User, label: "Meu Perfil", href: "/meu-perfil", roles: ['member', 'ministry_user', 'ministry_leader', 'social_media'] },
   { icon: CalendarDays, label: "Minha Escala", href: "/minha-escala", roles: ['ministry_user', 'ministry_leader'] },
   { icon: Users, label: "Gestão de Ministério", href: "/gestao-ministerio", roles: ['ministry_leader'] },
-  { icon: FileText, label: "Gestão de Conteúdo", href: "/gestao-conteudo", roles: ['social_media'] },
   { icon: Settings, label: "Configurações", href: "/configuracoes", roles: ['ministry_leader', 'social_media'] },
 ];
 
