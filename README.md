@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to your Remir project
 
 This project was generated from a template.
@@ -77,3 +78,6 @@ To deploy your project, you can use any static hosting service.
 ## Can I connect a custom domain to my project?
 
 Yes, you can! This project is a standard web application, so you can deploy it to any hosting provider and connect a custom domain as you would with any other web project.
+=======
+
+>>>>>>> b3383fdf871425a2ed924c17b5c0874733ead455
