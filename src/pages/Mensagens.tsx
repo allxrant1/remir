@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/components/ui/use-toast";
+import { useRef, useEffect } from "react";
+import AudioPlayerDrawer from "@/components/AudioPlayerDrawer";
 
 // Componente de partículas flutuantes
 const FloatingParticles = () => {
@@ -78,7 +81,7 @@ const Mensagens = () => {
   const [activeFilter, setActiveFilter] = useState("Todas");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const mensagens = [
+  const initialMessages = [
     {
       id: 1,
       titulo: "O Poder da Fé em Tempos Difíceis",
@@ -87,7 +90,8 @@ const Mensagens = () => {
       duracao: "45 min",
       visualizacoes: "1.2k",
       favorito: true,
-      thumbnail: "/placeholder.svg"
+      thumbnail: "/placeholder.svg",
+      audioUrl: "/audio/mensagem1.mp3"
     },
     {
       id: 2,
@@ -97,7 +101,8 @@ const Mensagens = () => {
       duracao: "38 min",
       visualizacoes: "890",
       favorito: false,
-      thumbnail: "/placeholder.svg"
+      thumbnail: "/placeholder.svg",
+      audioUrl: "/audio/mensagem2.mp3"
     },
     {
       id: 3,
@@ -107,9 +112,62 @@ const Mensagens = () => {
       duracao: "42 min",
       visualizacoes: "2.1k",
       favorito: true,
-      thumbnail: "/placeholder.svg"
+      thumbnail: "/placeholder.svg",
+      audioUrl: "/audio/mensagem3.mp3"
     }
   ];
+
+  const [mensagens, setMensagens] = useState(initialMessages);
+
+  const { toast } = useToast();
+
+  const [currentAudio, setCurrentAudio] = useState<typeof initialMessages[0] | null>(null);
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleFavoriteToggle = (id: number) => {
+    setMensagens((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, favorito: !m.favorito } : m))
+    );
+  };
+
+  const handleShare = async (mensagem: typeof initialMessages[0]) => {
+    const shareData = {
+      title: mensagem.titulo,
+      text: mensagem.titulo,
+      url: window.location.href,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        // usuário pode cancelar
+      }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        toast({ title: "Link copiado para a área de transferência" });
+      } catch (err) {
+        toast({ title: "Erro ao copiar link", variant: "destructive" });
+      }
+    }
+  };
+
+  const handlePlayClick = (mensagem: typeof initialMessages[0]) => {
+    setCurrentAudio(mensagem);
+    setIsPlayerOpen(false); // apenas mini-barra inicialmente
+  };
+
+  useEffect(() => {
+    if (currentAudio && audioRef.current) {
+      if (audioRef.current.src !== currentAudio.audioUrl) {
+        audioRef.current.src = currentAudio.audioUrl;
+      }
+      audioRef.current.play().catch(() => {});
+    }
+    // Bloqueia scroll quando drawer aberto
+    document.body.style.overflow = isPlayerOpen ? "hidden" : "auto";
+  }, [currentAudio, isPlayerOpen]);
 
   const filteredMessages = mensagens.filter(msg => {
     const matchesFilter = activeFilter === "Todas" || 
@@ -199,15 +257,16 @@ const Mensagens = () => {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className={`text-white/50 hover:text-blue-400 hover:bg-white/10 ${
+                            className={`text-gray-300 hover:text-blue-400 bg-transparent hover:bg-transparent p-1 ${
                               mensagem.favorito ? "text-blue-400" : ""
                             }`}
+                            onClick={() => handleFavoriteToggle(mensagem.id)}
                           >
                             <Star className={`w-5 h-5 ${mensagem.favorito ? "fill-current" : ""}`} />
                           </Button>
                         </div>
 
-                        <div className="flex flex-wrap gap-x-3 text-xs text-white/70 mb-4">
+                        <div className="flex flex-wrap gap-x-3 text-xs text-gray-200 mb-4">
                           <span>{mensagem.data}</span>
                           <span>•</span>
                           <span>{mensagem.duracao}</span>
@@ -219,6 +278,7 @@ const Mensagens = () => {
                           <Button 
                             size="sm"
                             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border-none"
+                            onClick={() => handlePlayClick(mensagem)}
                           >
                             <Play className="w-4 h-4 mr-1" />
                             Ouvir Agora
@@ -226,7 +286,8 @@ const Mensagens = () => {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className="text-white/70 hover:text-white hover:bg-white/10 border-white/20 hover:border-white/30 bg-transparent"
+                            className="text-gray-200 hover:text-white hover:bg-white/10 border-white/30 hover:border-white/50 bg-transparent"
+                            onClick={() => handleShare(mensagem)}
                           >
                             <Share2 className="w-4 h-4 mr-1" />
                             Compartilhar
@@ -241,6 +302,49 @@ const Mensagens = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Mini-barra fixa */}
+      {currentAudio && !isPlayerOpen && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-4 flex items-center z-40 cursor-pointer" onClick={() => setIsPlayerOpen(true)}>
+          <div className="flex-1 text-white">
+            <p className="font-semibold truncate max-w-[60vw]">{currentAudio.titulo}</p>
+            <p className="text-xs text-gray-400 truncate max-w-[60vw]">{currentAudio.pastor}</p>
+          </div>
+          {/* indicadores simples sem controles */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              setCurrentAudio(null);
+            }}
+            className="text-white ml-2"
+          >
+            ✕
+          </Button>
+        </div>
+      )}
+
+      {/* Player Drawer com overlay */}
+      <AnimatePresence>
+        {currentAudio && isPlayerOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsPlayerOpen(false)}
+            />
+
+            <AudioPlayerDrawer audio={currentAudio} audioRef={audioRef} onClose={() => setIsPlayerOpen(false)} />
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* hidden audio element */}
+      <audio ref={audioRef} className="hidden" />
     </div>
   );
 };

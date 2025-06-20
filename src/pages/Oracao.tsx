@@ -104,7 +104,7 @@ const Oracao = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const { role } = useAuth();
 
-  const pedidosComunidade = [
+  const initialPedidos = [
     {
       id: 1,
       nome: "Maria",
@@ -128,6 +128,37 @@ const Oracao = () => {
     }
   ];
 
+  const [pedidosComunidade, setPedidosComunidade] = useState(initialPedidos);
+
+  // ids orados armazenados em localStorage para persistir no navegador
+  const [prayedIds, setPrayedIds] = useState<Set<number>>(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("prayedIds") || "[]") as number[];
+      return new Set(stored);
+    } catch {
+      return new Set<number>();
+    }
+  });
+
+  // Pedidos aguardando moderação
+  const [pendingPedidos, setPendingPedidos] = useState<typeof initialPedidos>([]);
+
+  // Controle de exibição do painel de moderação
+  const [showModerationPanel, setShowModerationPanel] = useState(false);
+
+  const handlePray = (id: number) => {
+    if (prayedIds.has(id)) return; // já orou
+
+    setPedidosComunidade((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, oracoes: p.oracoes + 1 } : p))
+    );
+
+    const newSet = new Set(prayedIds);
+    newSet.add(id);
+    setPrayedIds(newSet);
+    localStorage.setItem("prayedIds", JSON.stringify(Array.from(newSet)));
+  };
+
   const testemunhos = [
     {
       id: 1,
@@ -148,18 +179,23 @@ const Oracao = () => {
     
     setIsSubmitting(true);
     
-    // Simulação de envio
-    setTimeout(() => {
-      console.log("Pedido enviado:", { nome, pedido });
-      setNome("");
-      setPedido("");
-      setIsSubmitting(false);
-      setShowConfirmation(true);
-      
-      setTimeout(() => {
-        setShowConfirmation(false);
-      }, 3000);
-    }, 1000);
+    const newPedido = {
+      id: Date.now(),
+      nome: nome || "Anônimo",
+      pedido,
+      oracoes: 0,
+      data: "agora"
+    };
+
+    // Adiciona na fila de moderação
+    setPendingPedidos((prev) => [newPedido, ...prev]);
+
+    setNome("");
+    setPedido("");
+    setIsSubmitting(false);
+    setShowConfirmation(true);
+
+    setTimeout(() => setShowConfirmation(false), 3000);
   };
 
   return (
@@ -302,17 +338,21 @@ const Oracao = () => {
                             <p className="text-white/70 mb-4 text-sm leading-relaxed">{item.pedido}</p>
                             <div className="flex items-center justify-between">
                               <PrayerCounter count={item.oracoes} />
-                              <Button 
-                                variant="ghost" 
-                                className="text-white/70 hover:text-white hover:bg-blue-500/20 rounded-full group"
+                              <Button
+                                variant="ghost"
+                                disabled={prayedIds.has(item.id)}
+                                onClick={() => handlePray(item.id)}
+                                className={`relative rounded-full group ${prayedIds.has(item.id) ? "text-blue-400" : "text-white/70 hover:text-white hover:bg-blue-500/20"}`}
                               >
-                                <Heart className="w-4 h-4 mr-2 group-hover:text-blue-400 transition-colors" />
-                                <span className="text-sm">Orar</span>
-                                <motion.div
-                                  className="absolute inset-0 rounded-full bg-blue-500/5 opacity-0 group-hover:opacity-100"
-                                  whileHover={{ scale: 1.05 }}
-                                  transition={{ duration: 0.2 }}
-                                />
+                                <Heart className={`w-4 h-4 mr-2 transition-colors ${prayedIds.has(item.id) ? "fill-current" : "group-hover:text-blue-400"}`} />
+                                <span className="text-sm">{prayedIds.has(item.id) ? "Orado" : "Orar"}</span>
+                                {!prayedIds.has(item.id) && (
+                                  <motion.div
+                                    className="absolute inset-0 rounded-full bg-blue-500/5 opacity-0 group-hover:opacity-100"
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.2 }}
+                                  />
+                                )}
                               </Button>
                             </div>
                           </CardContent>
@@ -380,19 +420,63 @@ const Oracao = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.5 }}
               >
-                <Card className="bg-white/5 backdrop-blur-xl border-white/10">
-                  <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                      <Users className="w-8 h-8 text-blue-400" />
+                {!showModerationPanel ? (
+                  <Card className="bg-white/5 backdrop-blur-xl border-white/10 text-center">
+                    <CardContent className="p-8">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center mx-auto mb-4">
+                        <Users className="w-8 h-8 text-blue-400" />
+                      </div>
+                      <h3 className="text-xl font-medium text-white mb-2">Área de Moderação</h3>
+                      <p className="text-white/60 max-w-md mx-auto">Área restrita para líderes e moderadores. Aqui você poderá gerenciar pedidos de oração pendentes.</p>
+                      <Button
+                        onClick={() => setShowModerationPanel(true)}
+                        className="mt-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600"
+                      >
+                        Acessar painel de moderação
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-medium text-white">Pedidos pendentes</h3>
+                      <Button variant="ghost" onClick={() => setShowModerationPanel(false)} className="text-white/70 hover:text-white">
+                        Voltar
+                      </Button>
                     </div>
-                    <h3 className="text-xl font-medium text-white mb-2">Área de Moderação</h3>
-                    <p className="text-white/60 max-w-md mx-auto">Área restrita para líderes e moderadores. Aqui você poderá gerenciar pedidos de oração e testemunhos.</p>
-                    <Button className="mt-6 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600">
-                      Acessar painel de moderação
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
+                    {pendingPedidos.length === 0 && (
+                      <p className="text-white/60">Nenhum pedido pendente.</p>
+                    )}
+                    {pendingPedidos.map((item) => (
+                      <Card key={item.id} className="bg-white/5 backdrop-blur-xl border-white/10 overflow-hidden">
+                        <CardContent className="p-6">
+                          <p className="text-white/70 mb-4 text-sm leading-relaxed">{item.pedido}</p>
+                          <div className="flex items-center justify-end gap-3">
+                            <Button
+                              size="sm"
+                              className="bg-green-600 hover:bg-green-700 text-white"
+                              onClick={() => {
+                                // Aprovar: move para lista principal como mais recente
+                                setPedidosComunidade((prev) => [{ ...item, data: "agora" }, ...prev]);
+                                setPendingPedidos((prev) => prev.filter((p) => p.id !== item.id));
+                              }}
+                            >
+                              Aprovar
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => setPendingPedidos((prev) => prev.filter((p) => p.id !== item.id))}
+                            >
+                              Reprovar
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             )}
           </motion.div>

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus, Heart, Check, Lightbulb, Image, BellRing, PhoneCall } from "lucide-react";
+import { Users, Mail, User, Calendar, MessageSquare, Camera, Phone, Plus, Heart, Check, Lightbulb, Image, BellRing, PhoneCall, Trash } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNotification } from "@/contexts/NotificationContext";
 
 // Componente de partículas flutuantes (reutilizado)
 const FloatingParticles = () => {
@@ -49,6 +50,7 @@ const FloatingParticles = () => {
 
 const Comunidade = () => {
   const { role } = useAuth();
+  const { addNotification } = useNotification();
 
   const fileInputRef = useRef<HTMLInputElement>(null); // Ref para o input de arquivo
 
@@ -61,14 +63,68 @@ const Comunidade = () => {
   const [newFotoTitulo, setNewFotoTitulo] = useState("");
   const [newFotoFile, setNewFotoFile] = useState<File | null>(null);
 
+  const initialComunicados = [
+    {
+      id: 1,
+      titulo: "Retiro Espiritual 2024",
+      data: "22 Nov 2024",
+      conteudo: "Inscrições abertas para o retiro espiritual que acontecerá de 5 a 7 de dezembro...",
+      urgente: true
+    },
+    {
+      id: 2,
+      titulo: "Nova Série de Estudos",
+      data: "20 Nov 2024",
+      conteudo: "Iniciamos uma nova série de estudos sobre os frutos do Espírito...",
+      urgente: false
+    }
+  ];
+
+  const [comunicados, setComunicados] = useState(initialComunicados);
+
+  const fotos = [
+    { id: 1, titulo: "Culto de Ação de Graças", data: "15 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=Culto" },
+    { id: 2, titulo: "Batismo na Praia", data: "10 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/50E3C2/FFFFFF?text=Batismo" },
+    { id: 3, titulo: "Encontro de Jovens", data: "5 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/F5A623/FFFFFF?text=Jovens" }
+  ];
+
+  const contatos = [
+    {
+      nome: "Pastor João Silva",
+      cargo: "Pastor Principal",
+      telefone: "(11) 99999-9999",
+      email: "pastor@remir.com"
+    },
+    {
+      nome: "Secretaria",
+      cargo: "Atendimento Geral",
+      telefone: "(11) 88888-8888",
+      email: "secretaria@remir.com"
+    }
+  ];
+
+  const filters = [
+    { id: "ministerios", label: "Ministérios", icon: <Users className="w-4 h-4" /> },
+    { id: "comunicados", label: "Comunicados", icon: <BellRing className="w-4 h-4" /> },
+    { id: "galeria", label: "Galeria", icon: <Camera className="w-4 h-4" /> },
+    { id: "contatos", label: "Contatos", icon: <PhoneCall className="w-4 h-4" /> },
+  ];
+
   const handleAddComunicado = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Novo Comunicado:", {
+    if (!newComunicadoTitulo.trim() || !newComunicadoConteudo.trim()) return;
+
+    const novo = {
+      id: Date.now(),
       titulo: newComunicadoTitulo,
       conteudo: newComunicadoConteudo,
       urgente: newComunicadoUrgente,
-    });
-    // Lógica para adicionar o comunicado ao banco de dados viria aqui
+      data: "agora",
+    };
+
+    setComunicados((prev) => [novo, ...prev]);
+    addNotification("Novo comunicado publicado");
+
     setNewComunicadoTitulo("");
     setNewComunicadoConteudo("");
     setNewComunicadoUrgente(false);
@@ -76,11 +132,9 @@ const Comunidade = () => {
 
   const handleAddFoto = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Nova Foto:", {
-      titulo: newFotoTitulo,
-      file: newFotoFile?.name,
-    });
-    // Lógica para adicionar a foto ao banco de dados viria aqui
+    if (!newFotoFile || !newFotoTitulo.trim()) return;
+
+    addNotification("Nova foto adicionada na galeria");
     setNewFotoTitulo("");
     setNewFotoFile(null);
   };
@@ -138,50 +192,9 @@ const Comunidade = () => {
     }
   ];
 
-  const comunicados = [
-    {
-      id: 1,
-      titulo: "Retiro Espiritual 2024",
-      data: "22 Nov 2024",
-      conteudo: "Inscrições abertas para o retiro espiritual que acontecerá de 5 a 7 de dezembro...",
-      urgente: true
-    },
-    {
-      id: 2,
-      titulo: "Nova Série de Estudos",
-      data: "20 Nov 2024",
-      conteudo: "Iniciamos uma nova série de estudos sobre os frutos do Espírito...",
-      urgente: false
-    }
-  ];
-
-  const fotos = [
-    { id: 1, titulo: "Culto de Ação de Graças", data: "15 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/4A90E2/FFFFFF?text=Culto" },
-    { id: 2, titulo: "Batismo na Praia", data: "10 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/50E3C2/FFFFFF?text=Batismo" },
-    { id: 3, titulo: "Encontro de Jovens", data: "5 Nov 2024", imageUrl: "https://via.placeholder.com/300x200/F5A623/FFFFFF?text=Jovens" }
-  ];
-
-  const contatos = [
-    {
-      nome: "Pastor João Silva",
-      cargo: "Pastor Principal",
-      telefone: "(11) 99999-9999",
-      email: "pastor@remir.com"
-    },
-    {
-      nome: "Secretaria",
-      cargo: "Atendimento Geral",
-      telefone: "(11) 88888-8888",
-      email: "secretaria@remir.com"
-    }
-  ];
-
-  const filters = [
-    { id: "ministerios", label: "Ministérios", icon: <Users className="w-4 h-4" /> },
-    { id: "comunicados", label: "Comunicados", icon: <BellRing className="w-4 h-4" /> },
-    { id: "galeria", label: "Galeria", icon: <Camera className="w-4 h-4" /> },
-    { id: "contatos", label: "Contatos", icon: <PhoneCall className="w-4 h-4" /> },
-  ];
+  const handleDeleteComunicado = (id: number) => {
+    setComunicados((prev) => prev.filter((c) => c.id !== id));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#1E293B] relative overflow-hidden">
@@ -352,11 +365,23 @@ const Comunidade = () => {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="text-lg font-bold text-white">{comunicado.titulo}</h3>
-                          {comunicado.urgente && (
-                            <Badge className="bg-red-500/20 text-red-400 border-red-400/50 px-2 py-0.5 rounded-full">
-                              Urgente
-                            </Badge>
-                          )}
+                          <div className="flex items-center gap-2">
+                            {comunicado.urgente && (
+                              <Badge className="bg-red-500/20 text-red-400 border-red-400/50 px-2 py-0.5 rounded-full">
+                                Urgente
+                              </Badge>
+                            )}
+                            {role === "social_media" && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => handleDeleteComunicado(comunicado.id)}
+                                className="text-red-400 hover:bg-red-500/10"
+                              >
+                                <Trash className="w-4 h-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                         <p className="text-white/70 text-sm mb-2">{comunicado.conteudo}</p>
                         <p className="text-white/50 text-xs">Publicado em {comunicado.data}</p>

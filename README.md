@@ -1,83 +1,138 @@
-<<<<<<< HEAD
-# Welcome to your Remir project
+# REMIR - Sistema de Gestão de Ministérios
 
-This project was generated from a template.
+## Visão Geral
+O REMIR é um sistema moderno de gestão de ministérios desenvolvido para a Igreja REMIR. Oferece uma plataforma completa para gerenciamento de membros, escalas, eventos e ministérios, com foco em usabilidade e experiência do usuário.
 
-**URL**: 
+## Funcionalidades Principais
 
-This project uses Vite for development and building.
+### Autenticação e Perfil
+- Login seguro
+- Cadastro de novos membros
+- Recuperação de senha
+- Gerenciamento de perfil
+- Proteção de rotas
 
-## Getting Started
+### Gestão de Escalas
+- Visualização de compromissos
+- Confirmação de presença
+- Gerenciamento de ministérios
+- Notificações de escala
+- Histórico de participação
 
-To get started with the project, follow these steps:
+### Interface Moderna
+- Design responsivo
+- Tema escuro elegante
+- Animações suaves
+- Feedback visual claro
+- Acessibilidade
 
-1.  **Clone the repository**
+## Tecnologias Utilizadas
 
-    ```bash
-    git clone [your-repo-url]
-    cd remir-design-system
-    ```
+### Frontend
+- React com TypeScript
+- Tailwind CSS
+- Lucide Icons
+- Componentes UI personalizados
+- Sistema de toast
+- Contexto de autenticação
 
-2.  **Install dependencies**
+### Backend
+- Supabase
+- Autenticação segura
+- Banco de dados PostgreSQL
+- API RESTful
+- Armazenamento em nuvem
 
-    ```bash
-    npm install # or yarn install or pnpm install
-    ```
+## Estrutura do Projeto
 
-3.  **Run the development server**
+### Páginas
+- Login
+- Cadastro
+- Recuperação de Senha
+- Meu Perfil
+- Minha Escala
 
-    ```bash
-    npm run dev # or yarn dev or pnpm dev
-    ```
+### Componentes
+- UI Components
+- Layout Components
+- Form Components
+- Feedback Components
 
-    This will start the development server at `http://localhost:8080`.
+### Contextos
+- AuthContext
+- ThemeContext
+- NotificationContext
 
-## Project Structure
+## Documentação
 
-Your project is structured as follows:
+### Páginas
+- [Login](docs/Login.md)
+- [Cadastro](docs/Cadastro.md)
+- [Recuperação de Senha](docs/RecuperarSenha.md)
+- [Meu Perfil](docs/MeuPerfil.md)
+- [Minha Escala](docs/MinhaEscala.md)
 
-```
-.github/
-src/
-  assets/
-  components/
-  contexts/
-  hooks/
-  pages/
-  routes/
-  services/
-  types/
-  App.tsx
-  main.tsx
-  index.css
-public/
-.env
-.gitignore
-index.html
-package.json
-postcss.config.js
-tailwind.config.js
-tsconfig.json
-vite.config.ts
-```
+## Instalação
 
-## Building for Production
-
-To build the project for production, run:
-
+1. Clone o repositório:
 ```bash
-npm run build # or yarn build or pnpm build
+git clone https://github.com/seu-usuario/remir-lovable-design-system.git
 ```
 
-This will create a `dist` directory with your production-ready files.
+2. Instale as dependências:
+```bash
+npm install
+```
 
-## Deployment
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
+```
 
-To deploy your project, you can use any static hosting service.
+4. Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
 
-## Can I connect a custom domain to my project?
+## Contribuição
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-Yes, you can! This project is a standard web application, so you can deploy it to any hosting provider and connect a custom domain as you would with any other web project.
-=======
+## Segurança
+- Autenticação segura
+- Proteção de rotas
+- Validação de dados
+- Criptografia
+- Sanitização de inputs
 
->>>>>>> b3383fdf871425a2ed924c17b5c0874733ead455
+## Acessibilidade
+- ARIA labels
+- Roles semânticos
+- Navegação por teclado
+- Textos alternativos
+- Contraste adequado
+
+## Roadmap
+- [ ] Sistema de notificações
+- [ ] Calendário integrado
+- [ ] Relatórios avançados
+- [ ] App mobile
+- [ ] Integração com WhatsApp
+- [ ] Sistema de feedback
+- [ ] Gestão de eventos
+- [ ] Portal do líder
+
+## Licença
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Contato
+Igreja REMIR - [contato@remir.com.br](mailto:contato@remir.com.br)
+
+## Agradecimentos
+- Equipe de desenvolvimento
+- Comunidade REMIR
+- Contribuidores
+- Suporte técnico
